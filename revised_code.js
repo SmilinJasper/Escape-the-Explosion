@@ -3,6 +3,8 @@
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
+// Import Images
+
 var bomb = new Image();
 var background = new Image();
 var footground = new Image();
@@ -13,7 +15,7 @@ background.src = "img/background.png";
 footground.src = "img/footground.jpg";
 backButton.src = " img/back_button.png";
 
-//Audio Files
+//Import Audio Files
 
 var left = new Audio();
 var right = new Audio();
@@ -24,7 +26,6 @@ var scoreAudio = new Audio();
 var lose = new Audio();
 var select = new Audio();
 var back = new Audio();
-var backgroundMusic = new Audio();
 
 up.src = "audio/up.mp3";
 down.src = "audio/down.mp3";
@@ -35,9 +36,8 @@ scoreAudio.src = "audio/score.mp3";
 start.src = "audio/start.ogg";
 select.src = "audio/select.wav";
 back.src = "audio/back.wav";
-backgroundMusic.src = "audio/background_music.mp3";
 
-//Create Background
+//Create Background and Footground
 
 background.onload = function() {
     ctx.drawImage(background, 0, 0, 520, 320);
@@ -58,6 +58,7 @@ footground.onload = function() {
     ctx.drawImage(footground, 0, 320, 520, 40);
 }
 
+//Menu Functions
 function displayHighScoreBoard(event) {
     let key = event.keyCode;
     if (key == 72) {
@@ -119,6 +120,8 @@ var thirdHighscore = localStorage.getItem("thirdHighscore");
 
 function draw(x, y, width, height) {
 
+    //Start Key
+
     document.addEventListener("keydown", function(event) {
         var key = event.keyCode;
         if (key == 13) {
@@ -134,7 +137,7 @@ function draw(x, y, width, height) {
         }
     });
 
-    //Position of Obstacles
+    //Initial Position of Obstacles
 
     obX = Math.floor(Math.random() * 169);
     obY = 0;
@@ -155,6 +158,12 @@ function draw(x, y, width, height) {
     ob6Y = 0;
 
     //Spawning Obstacles
+
+    ctx.clearRect(0, 0, 520, 320);
+    ctx.drawImage(background, 0, 0, 520, 320);
+    ctx.drawImage(bomb, obX, obY, 20, 20);
+    ctx.drawImage(bomb, ob2X, ob2Y, 20, 20);
+    ctx.drawImage(bomb, ob3X, ob3Y, 20, 20);
 
     function createObstacles() {
         obY += speed;
@@ -338,6 +347,7 @@ function draw(x, y, width, height) {
             ctx.drawImage(bomb, ob6X, ob6Y, 20, 20);
         }
     }
+
     //Movements
 
     function movements(event) {
@@ -357,7 +367,7 @@ function draw(x, y, width, height) {
         levelAnnouncement();
     }
 
-    //Assigning key to each movement
+    //Assigning keys to each movement
 
     function moveRight() {
         redrawEverything();
@@ -404,7 +414,6 @@ function draw(x, y, width, height) {
             ctx.fillText("3. " + thirdHighscore, 260, 290);
             ctx.clearRect(0, 320, 520, 40);
             ctx.drawImage(footground, 0, 320, 520, 40);
-            backgroundMusic.src = "";
             lose.play();
             return "Game Over";
         }
@@ -425,5 +434,5 @@ function draw(x, y, width, height) {
 draw(x, y, width, height);
 
 function nope() {
-
+    //Empty function that does nothing
 }
