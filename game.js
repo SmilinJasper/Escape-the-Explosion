@@ -1,14 +1,14 @@
 //Canvas for drawing
 
-var canvas = document.getElementById("canvas");
-var ctx = canvas.getContext("2d");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
 // Import Images
 
-var bomb = new Image();
-var background = new Image();
-var footground = new Image();
-var backButton = new Image();
+let bomb = new Image();
+let background = new Image();
+let footground = new Image();
+let backButton = new Image();
 
 bomb.src = "img/bomb.png";
 background.src = "img/background.png";
@@ -17,15 +17,15 @@ backButton.src = " img/back_button.png";
 
 //Import Audio Files
 
-var left = new Audio();
-var right = new Audio();
-var up = new Audio();
-var down = new Audio();
-var start = new Audio();
-var scoreAudio = new Audio();
-var lose = new Audio();
-var select = new Audio();
-var back = new Audio();
+const left = new Audio();
+const right = new Audio();
+const up = new Audio();
+const down = new Audio();
+const start = new Audio();
+const scoreAudio = new Audio();
+const lose = new Audio();
+const select = new Audio();
+const back = new Audio();
 
 up.src = "audio/up.mp3";
 down.src = "audio/down.mp3";
@@ -39,7 +39,7 @@ back.src = "audio/back.wav";
 
 //Create Background and Footground
 
-background.onload = function() {
+background.onload = () => {
     ctx.drawImage(background, 0, 0, 520, 320);
     ctx.textAlign = "center";
     ctx.font = "100px Game Over";
@@ -54,7 +54,7 @@ background.onload = function() {
     document.addEventListener("keydown", displayHighScoreBoard);
 }
 
-footground.onload = function() {
+footground.onload = () => {
     ctx.drawImage(footground, 0, 320, 520, 40);
 }
 
@@ -106,15 +106,15 @@ function displayMainScreen(event) {
 
 //Initial positon and values
 
-var x = 260;
-var y = 300;
-var width = 20;
-var height = 20;
-var score = 0;
-var speed = 0;
-var highscore = localStorage.getItem("highscore");
-var secondHighscore = localStorage.getItem("secondHighscore");
-var thirdHighscore = localStorage.getItem("thirdHighscore");
+let x = 260;
+let y = 300;
+const width = 20;
+const height = 20;
+let score = 0;
+let speed = 0;
+let highscore = localStorage.getItem("highscore");
+let secondHighscore = localStorage.getItem("secondHighscore");
+let thirdHighscore = localStorage.getItem("thirdHighscore");
 
 //Draw Everything to canvas
 
@@ -122,7 +122,7 @@ function draw(x, y, width, height) {
 
     //Start Key
 
-    document.addEventListener("keydown", function(event) {
+    document.addEventListener("keydown", (event) => {
         var key = event.keyCode;
         if (key == 13) {
             createObstacles();
@@ -139,23 +139,23 @@ function draw(x, y, width, height) {
 
     //Initial Position of Obstacles
 
-    obX = Math.floor(Math.random() * 169);
-    obY = 0;
+    let obX = Math.floor(Math.random() * 169);
+    let obY = 0;
 
-    ob2X = Math.floor((Math.random() * (320 - 189) + 189));
-    ob2Y = 0;
+    let ob2X = Math.floor((Math.random() * (320 - 189) + 189));
+    let ob2Y = 0;
 
-    ob3X = Math.floor(Math.random() * (500 - 340) + 340);
-    ob3Y = 0;
+    let ob3X = Math.floor(Math.random() * (500 - 340) + 340);
+    let ob3Y = 0;
 
-    ob4X = Math.floor(Math.random() * (500 - 395) + 395);
-    ob4Y = 0;
+    let ob4X = Math.floor(Math.random() * (500 - 395) + 395);
+    let ob4Y = 0;
 
-    ob5X = Math.floor(Math.random() * (500 - 420) + 420);
-    ob5Y = 0;
+    let ob5X = Math.floor(Math.random() * (500 - 420) + 420);
+    let ob5Y = 0;
 
-    ob6X = Math.floor(Math.random() * (500 - 420) + 420);
-    ob6Y = 0;
+    let ob6X = Math.floor(Math.random() * (500 - 420) + 420);
+    let ob6Y = 0;
 
     //Spawning Obstacles
 
@@ -165,7 +165,7 @@ function draw(x, y, width, height) {
     ctx.drawImage(bomb, ob2X, ob2Y, 20, 20);
     ctx.drawImage(bomb, ob3X, ob3Y, 20, 20);
 
-    function createObstacles() {
+    let createObstacles = () => {
         obY += speed;
         ob2Y += speed;
         ob3Y += speed;
@@ -396,9 +396,9 @@ function draw(x, y, width, height) {
     //Game Over
 
     function gameOver() {
-        if (playerIsTouchingObstacle == true || playerIsTouchingObstacle2 == true || playerIsTouchingObstacle3 == true || playerIsTouchingObstacle4 == true || playerIsTouchingObstacle5 == true || playerIsTouchingObstacle6 == true) {
+        if (playerIsTouchingObstacle || playerIsTouchingObstacle2 || playerIsTouchingObstacle3 || playerIsTouchingObstacle4 || playerIsTouchingObstacle5 || playerIsTouchingObstacle6) {
             cancelAnimationFrame(createObstacles);
-            createObstacles = nope;
+            createObstacles = {};
             document.removeEventListener("keydown", movements);
             ctx.clearRect(0, 0, 520, 320);
             ctx.drawImage(background, 0, 0, 520, 320);
@@ -432,7 +432,3 @@ function draw(x, y, width, height) {
 }
 
 draw(x, y, width, height);
-
-function nope() {
-    //Empty function that does nothing
-}
