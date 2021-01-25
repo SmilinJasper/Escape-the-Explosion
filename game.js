@@ -129,32 +129,32 @@ function draw(x, y, playerWidth, playerHeight) {
     //Initial Position of Obstacles
 
     const obstacles = {
-        ob1 = {
+        1: {
             x: Math.floor(Math.random() * 169),
             y: 0
         },
-        ob2 = {
+        2: {
             x: Math.floor((Math.random() * (320 - 189) + 189)),
             y: 0
         },
-        ob3 = {
+        3: {
             x: Math.floor(Math.random() * (500 - 340) + 340),
             y: 0
         },
-        ob4 = {
+        4: {
             x: Math.floor(Math.random() * (500 - 395) + 395),
             y: 0
         },
-        ob5 = {
-            x = Math.floor(Math.random() * (500 - 420) + 420),
-            y = 0
+        5: {
+            x: Math.floor(Math.random() * (500 - 420) + 420),
+            y: 0
         },
-        ob6 = {
+        6: {
             x: Math.floor(Math.random() * (500 - 420) + 420),
             y: 0
         }
     }
-
+    setInterval(() => { console.log(obstacles[1]) }, 1000);
     //Spawning Obstacles
 
     ctx.clearRect(0, 0, 520, 320);
