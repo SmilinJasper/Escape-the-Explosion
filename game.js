@@ -120,9 +120,9 @@ function draw(x, y, playerWidth, playerHeight) {
             document.addEventListener("keydown", movements);
             document.removeEventListener(event.type, arguments.callee);
             start.play();
-            backgroundMusic.volume = 0.0;
+            /*backgroundMusic.volume = 0.0;
             backgroundMusic.play();
-            backgroundMusic.loop();
+            backgroundMusic.loop();*/
         }
     });
 
