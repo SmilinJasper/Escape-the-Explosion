@@ -61,7 +61,6 @@ footground.onload = () => {
 }
 
 //Menu Functions
-
 function displayHighScoreBoard(event) {
     let key = event.keyCode;
     if (key == 72) {
@@ -78,8 +77,8 @@ function displayHighScoreBoard(event) {
         ctx.font = "35px Game Over";
         ctx.textAlign = "start";
         ctx.fillText("BACK - BACKSPACE", 10, 310);
-        document.removeEventListener(event.type, displayHighScoreBoard);
         ctx.drawImage(backButton, 10, 10);
+        document.removeEventListener(event.type, displayHighScoreBoard);
         document.addEventListener("keydown", displayMainScreen);
     }
 }
@@ -98,8 +97,8 @@ function displayMainScreen(event) {
 
 let x = 260;
 let y = 300;
-const width = 20;
-const height = 20;
+const playerWidth = 20;
+const playerHeight = 20;
 let score = 0;
 let speed = 0;
 let highscore = localStorage.getItem("highscore");
@@ -108,8 +107,8 @@ let thirdHighscore = localStorage.getItem("thirdHighscore");
 
 //Draw Everything to canvas
 
-function draw(x, y, width, height) {
-
+function draw(x, y, playerWidth, playerHeight) {
+    score = 0;
     //Start Key
 
     document.addEventListener("keydown", (event) => {
@@ -121,99 +120,102 @@ function draw(x, y, width, height) {
             document.addEventListener("keydown", movements);
             document.removeEventListener(event.type, arguments.callee);
             start.play();
-            backgroundMusic.volume = 0.0;
+            /*backgroundMusic.volume = 0.0;
             backgroundMusic.play();
-            backgroundMusic.loop();
+            backgroundMusic.loop();*/
         }
     });
 
     //Initial Position of Obstacles
 
-    let obX = Math.floor(Math.random() * 169);
-    let obY = 0;
-
-    let ob2X = Math.floor((Math.random() * (320 - 189) + 189));
-    let ob2Y = 0;
-
-    let ob3X = Math.floor(Math.random() * (500 - 340) + 340);
-    let ob3Y = 0;
-
-    let ob4X = Math.floor(Math.random() * (500 - 395) + 395);
-    let ob4Y = 0;
-
-    let ob5X = Math.floor(Math.random() * (500 - 420) + 420);
-    let ob5Y = 0;
-
-    let ob6X = Math.floor(Math.random() * (500 - 420) + 420);
-    let ob6Y = 0;
+    const obstacles = {
+        1: {
+            x: Math.floor(Math.random() * 169),
+            y: 0
+        },
+        2: {
+            x: Math.floor((Math.random() * (320 - 189) + 189)),
+            y: 0
+        },
+        3: {
+            x: Math.floor(Math.random() * (500 - 340) + 340),
+            y: 0
+        },
+        4: {
+            x: Math.floor(Math.random() * (500 - 395) + 395),
+            y: 0
+        },
+        5: {
+            x: Math.floor(Math.random() * (500 - 420) + 420),
+            y: 0
+        },
+        6: {
+            x: Math.floor(Math.random() * (500 - 420) + 420),
+            y: 0
+        }
+    }
 
     //Spawning Obstacles
 
-    ctx.clearRect(0, 0, 520, 320);
-    ctx.drawImage(background, 0, 0, 520, 320);
-    ctx.drawImage(bomb, obX, obY, 20, 20);
-    ctx.drawImage(bomb, ob2X, ob2Y, 20, 20);
-    ctx.drawImage(bomb, ob3X, ob3Y, 20, 20);
-
     let createObstacles = () => {
-        obY += speed;
-        ob2Y += speed;
-        ob3Y += speed;
+        obstacles[1].y += speed;
+        obstacles[2].y += speed;
+        obstacles[3].y += speed;
 
         ctx.clearRect(0, 0, 520, 320);
         ctx.drawImage(background, 0, 0, 520, 320);
-        ctx.drawImage(bomb, obX, obY, 20, 20);
-        ctx.drawImage(bomb, ob2X, ob2Y, 20, 20);
-        ctx.drawImage(bomb, ob3X, ob3Y, 20, 20);
+        ctx.drawImage(bomb, obstacles[1].x, obstacles[1].y, 20, 20);
+        ctx.drawImage(bomb, obstacles[2].x, obstacles[2].y, 20, 20);
+        ctx.drawImage(bomb, obstacles[3].x, obstacles[3].y, 20, 20);
 
         ctx.fillStyle = "black";
         ctx.fillRect(x, y, 20, 20);
 
         //Respawn Obstacles 
 
-        if (obY == 300) {
+        if (obstacles[1].y == 300) {
             scoreAudio.play();
             score += 3;
             if (score < 30) {
-                obX = Math.floor(Math.random() * 169);
-                obY = 0;
-                ob2X = Math.floor((Math.random() * (320 - 189) + 189));
-                ob2Y = 0;
-                ob3X = Math.floor(Math.random() * (500 - 340) + 340);
-                ob3Y = 0;
+                obstacles[1].x = Math.floor(Math.random() * 169);
+                obstacles[1].y = 0;
+                obstacles[2].x = Math.floor((Math.random() * (320 - 189) + 189));
+                obstacles[2].y = 0;
+                obstacles[3].x = Math.floor(Math.random() * (500 - 340) + 340);
+                obstacles[3].y = 0;
             } else if (score < 60) {
-                obX = Math.floor(Math.random() * 125);
-                obY = 0;
-                ob2X = Math.floor((Math.random() * (250 - 145) + 145));
-                ob2Y = 0;
-                ob3X = Math.floor(Math.random() * (375 - 270) + 270);
-                ob3Y = 0;
-                ob4X = Math.floor(Math.random() * (500 - 395) + 395);
-                ob4Y = 0;
+                obstacles[1].x = Math.floor(Math.random() * 125);
+                obstacles[1].y = 0;
+                obstacles[2].x = Math.floor((Math.random() * (250 - 145) + 145));
+                obstacles[2].y = 0;
+                obstacles[3].x = Math.floor(Math.random() * (375 - 270) + 270);
+                obstacles[3].y = 0;
+                obstacles[4].x = Math.floor(Math.random() * (500 - 395) + 395);
+                obstacles[4].y = 0;
             } else if (score < 100) {
-                obX = Math.floor(Math.random() * 100);
-                obY = 0;
-                ob2X = Math.floor((Math.random() * (200 - 120) + 120));
-                ob2Y = 0;
-                ob3X = Math.floor(Math.random() * (300 - 220) + 220);
-                ob3Y = 0;
-                ob4X = Math.floor(Math.random() * (400 - 320) + 320);
-                ob4Y = 0;
-                ob5X = Math.floor(Math.random() * (500 - 420) + 420);
-                ob5Y = 0;
+                obstacles[1].x = Math.floor(Math.random() * 100);
+                obstacles[1].y = 0;
+                obstacles[2].x = Math.floor((Math.random() * (200 - 120) + 120));
+                obstacles[2].y = 0;
+                obstacles[3].x = Math.floor(Math.random() * (300 - 220) + 220);
+                obstacles[3].y = 0;
+                obstacles[4].x = Math.floor(Math.random() * (400 - 320) + 320);
+                obstacles[4].y = 0;
+                obstacles[5].x = Math.floor(Math.random() * (500 - 420) + 420);
+                obstacles[5].y = 0;
             } else {
-                obX = Math.floor(Math.random() * 80);
-                obY = 0;
-                ob2X = Math.floor((Math.random() * (160 - 100) + 100));
-                ob2Y = 0;
-                ob3X = Math.floor(Math.random() * (240 - 180) + 180);
-                ob3Y = 0;
-                ob4X = Math.floor(Math.random() * (320 - 260) + 260);
-                ob4Y = 0;
-                ob5X = Math.floor(Math.random() * (400 - 340) + 340);
-                ob5Y = 0;
-                ob6X = Math.floor(Math.random() * (500 - 420) + 420);
-                ob6Y = 0;
+                obstacles[1].x = Math.floor(Math.random() * 80);
+                obstacles[1].y = 0;
+                obstacles[2].x = Math.floor((Math.random() * (160 - 100) + 100));
+                obstacles[2].y = 0;
+                obstacles[3].x = Math.floor(Math.random() * (240 - 180) + 180);
+                obstacles[3].y = 0;
+                obstacles[4].x = Math.floor(Math.random() * (320 - 260) + 260);
+                obstacles[4].y = 0;
+                obstacles[5].x = Math.floor(Math.random() * (400 - 340) + 340);
+                obstacles[5].y = 0;
+                obstacles[6].x = Math.floor(Math.random() * (500 - 420) + 420);
+                obstacles[6].y = 0;
             }
         }
 
@@ -221,22 +223,22 @@ function draw(x, y, width, height) {
             speed = 1.5;
         } else if (score < 60) {
             speed = 2;
-            ctx.drawImage(bomb, ob4X, ob4Y, 20, 20);
-            ob4Y += speed;
+            ctx.drawImage(bomb, obstacles[4].x, obstacles[4].y, 20, 20);
+            obstacles[4].y += speed;
         } else if (score < 100) {
             speed = 2.5;
-            ctx.drawImage(bomb, ob4X, ob4Y, 20, 20);
-            ctx.drawImage(bomb, ob5X, ob5Y, 20, 20);
-            ob4Y += speed;
-            ob5Y += speed;
+            ctx.drawImage(bomb, obstacles[4].x, obstacles[4].y, 20, 20);
+            ctx.drawImage(bomb, obstacles[5].x, obstacles[5].y, 20, 20);
+            obstacles[4].y += speed;
+            obstacles[5].y += speed;
         } else {
             speed = 3;
-            ctx.drawImage(bomb, ob4X, ob4Y, 20, 20);
-            ctx.drawImage(bomb, ob5X, ob5Y, 20, 20);
-            ctx.drawImage(bomb, ob6X, ob6Y, 20, 20);
-            ob4Y += speed;
-            ob5Y += speed;
-            ob6Y += speed;
+            ctx.drawImage(bomb, obstacles[4].x, obstacles[4].y, 20, 20);
+            ctx.drawImage(bomb, obstacles[5].x, obstacles[5].y, 20, 20);
+            ctx.drawImage(bomb, obstacles[6].x, obstacles[6].y, 20, 20);
+            obstacles[4].y += speed;
+            obstacles[5].y += speed;
+            obstacles[6].y += speed;
         }
 
         //Store Highscores to Local Storage
@@ -265,20 +267,20 @@ function draw(x, y, width, height) {
 
         //Logic for Game Over
 
-        playerIsTouchingObstacle = (x + 19 >= obX && x + 19 <= obX + 38 && y - 19 <= obY && y - 19 > obY - 38);
-        playerIsTouchingObstacle2 = (x + 19 >= ob2X && x + 19 <= ob2X + 38 && y - 19 <= ob2Y && y - 19 > ob2Y - 38);
-        playerIsTouchingObstacle3 = (x + 19 >= ob3X && x + 19 <= ob3X + 38 && y - 19 <= ob3Y && y - 19 > ob3Y - 38);
+        playerIsTouchingObstacle = (x + 19 >= obstacles[1].x && x + 19 <= obstacles[1].x + 38 && y - 19 <= obstacles[1].y && y - 19 > obstacles[1].y - 38);
+        playerIsTouchingObstacle2 = (x + 19 >= obstacles[2].x && x + 19 <= obstacles[2].x + 38 && y - 19 <= obstacles[2].y && y - 19 > obstacles[2].y - 38);
+        playerIsTouchingObstacle3 = (x + 19 >= obstacles[3].x && x + 19 <= obstacles[3].x + 38 && y - 19 <= obstacles[3].y && y - 19 > obstacles[3].y - 38);
         playerIsTouchingObstacle4 = false;
         playerIsTouchingObstacle5 = false;
         playerIsTouchingObstacle6 = false;
         if (score > 30) {
-            playerIsTouchingObstacle4 = (x + 19 >= ob4X && x + 19 <= ob4X + 38 && y - 19 <= ob4Y && y - 19 > ob4Y - 38);
+            playerIsTouchingObstacle4 = (x + 19 >= obstacles[4].x && x + 19 <= obstacles[4].x + 38 && y - 19 <= obstacles[4].y && y - 19 > obstacles[4].y - 38);
         }
         if (score > 60) {
-            playerIsTouchingObstacle5 = (x + 19 >= ob5X && x + 19 <= ob5X + 38 && y - 19 <= ob5Y && y - 19 > ob5Y - 38);
+            playerIsTouchingObstacle5 = (x + 19 >= obstacles[5].x && x + 19 <= obstacles[5].x + 38 && y - 19 <= obstacles[5].y && y - 19 > obstacles[5].y - 38);
         }
         if (score > 100) {
-            playerIsTouchingObstacle6 = (x + 19 >= ob6X && x + 19 <= ob6X + 38 && y - 19 <= ob6Y && y - 19 > ob6Y - 38);
+            playerIsTouchingObstacle6 = (x + 19 >= obstacles[6].x && x + 19 <= obstacles[6].x + 38 && y - 19 <= obstacles[6].y && y - 19 > obstacles[6].y - 38);
         }
 
         levelAnnouncement();
@@ -321,20 +323,20 @@ function draw(x, y, width, height) {
     function redrawEverything() {
         ctx.clearRect(0, 0, 520, 320);
         ctx.drawImage(background, 0, 0, 520, 320);
-        ctx.drawImage(bomb, obX, obY, 20, 20);
-        ctx.drawImage(bomb, ob2X, ob2Y, 20, 20);
-        ctx.drawImage(bomb, ob3X, ob3Y, 20, 20);
+        ctx.drawImage(bomb, obstacles[1].x, obstacles[1].y, 20, 20);
+        ctx.drawImage(bomb, obstacles[2].x, obstacles[2].y, 20, 20);
+        ctx.drawImage(bomb, obstacles[3].x, obstacles[3].y, 20, 20);
         ctx.fillStyle = "black";
-        ctx.fillRect(x, y, width, height);
+        ctx.fillRect(x, y, playerWidth, playerHeight);
 
         if (score >= 30) {
-            ctx.drawImage(bomb, ob4X, ob4Y, 20, 20);
+            ctx.drawImage(bomb, obstacles[4].x, obstacles[4].y, 20, 20);
         }
         if (score >= 60) {
-            ctx.drawImage(bomb, ob5X, ob5Y, 20, 20);
+            ctx.drawImage(bomb, obstacles[5].x, obstacles[5].y, 20, 20);
         }
         if (score >= 100) {
-            ctx.drawImage(bomb, ob6X, ob6Y, 20, 20);
+            ctx.drawImage(bomb, obstacles[6].x, obstacles[6].y, 20, 20);
         }
     }
 
@@ -421,13 +423,15 @@ function draw(x, y, width, height) {
     }
 }
 
-draw(x, y, width, height);
+draw(x, y, playerWidth, playerHeight);
 
 // Restart Game
 
-/*document.addEventListener("event", () => {
+document.addEventListener("keydown", () => {
     let key = event.keyCode;
     if (key == 13) {
-        draw(x, y, width, height)
+        draw(x, y, playerWidth, playerHeight)
     }
-});*/
+});
+
+draw(x, y, playerWidth, playerHeight);
