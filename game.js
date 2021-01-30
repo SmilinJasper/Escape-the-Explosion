@@ -110,7 +110,8 @@ let thirdHighscore = localStorage.getItem("thirdHighscore");
 document.addEventListener("keydown", (event) => {
     var key = event.keyCode;
     if (key == 13) {
-        draw(x, y, playerWidth, playerHeight);
+        draw(playerWidth, playerHeight);
+        document.addEventListener("keydown", movements);
         document.removeEventListener("keydown", displayMainScreen);
         document.removeEventListener("keydown", displayHighScoreBoard);
         document.removeEventListener(event.type, arguments.callee);
@@ -120,20 +121,6 @@ document.addEventListener("keydown", (event) => {
         backgroundMusic.loop();*/
     }
 });
-
-//Set Directions
-
-let direction;
-
-document.addEventListener("keydown", (event) => {
-    let key = event.keyCode;
-    if (key == 39) direction = "right";
-    if (key == 37) direction = "left";
-    if (key == 40) direction = "down";
-    if (key == 38) direction = "up";
-})
-
-setInterval(() => { console.log(direction), 1000 });
 
 //Initial Position of Obstacles
 
@@ -166,7 +153,7 @@ const obstacles = {
 
 //Draw Everything to canvas
 
-function draw(x, y, playerWidth, playerHeight) {
+function draw(playerWidth, playerHeight) {
 
     //Spawning Obstacles
 
@@ -287,53 +274,52 @@ function draw(x, y, playerWidth, playerHeight) {
     announceLevel()
     gameOver();
     writeScore();
-    requestAnimationFrame(() => draw(x, y, playerWidth, playerHeight));
+    requestAnimationFrame(() => draw(playerWidth, playerHeight));
+}
 
-    //Movements
+//Movements
 
-    if (direction == "right") {
+function movements(event) {
+    var key = event.keyCode;
+    if (key == 39 && x <= 495) {
         moveRight();
-        return;
     }
-    if (direction == "left") {
+    if (key == 37 && x >= 5) {
         moveLeft();
-        return;
     }
-    if (direction == "down") {
+    if (key == 40 && y <= 295) {
         moveDown();
-        return;
     }
-    if (direction == "up") {
+    if (key == 38 && y >= 5) {
         moveUp();
-        return;
     }
+    announceLevel();
+}
 
-    //Assigning keys to each movement
+//Assigning keys to each movement
 
-    function moveRight() {
-        redrawEverything();
-        x += 5;
-        right.play();
-    }
+function moveRight() {
+    x += 5;
+    redrawEverything();
+    right.play();
+}
 
-    function moveLeft() {
-        redrawEverything();
-        x -= 5;
-        left.play();
-    }
+function moveLeft() {
+    x -= 5;
+    redrawEverything();
+    left.play();
+}
 
-    function moveUp() {
-        redrawEverything();
-        y -= 5;
-        up.play();
-    }
+function moveUp() {
+    y -= 5;
+    redrawEverything();
+    up.play();
+}
 
-    function moveDown() {
-        redrawEverything();
-        y += 5;
-        down.play();
-    }
-
+function moveDown() {
+    y += 5;
+    redrawEverything();
+    down.play();
 }
 
 //Function to Redraw Everything
@@ -409,5 +395,5 @@ function writeScore() {
 
 document.addEventListener("keydown", () => {
     let key = event.keyCode;
-    if (key == 13) draw(x, y, playerWidth, playerHeight)
+    if (key == 13) draw(playerWidth, playerHeight)
 });
