@@ -107,11 +107,12 @@ let thirdHighscore = localStorage.getItem("thirdHighscore");
 
 // Start Key
 
-document.addEventListener("keydown", (event) => {
+document.addEventListener("keydown", startGame);
+
+function startGame(event) {
     var key = event.keyCode;
     if (key == 13) {
-        draw(playerWidth, playerHeight);
-        document.addEventListener("keydown", movements);
+        draw(x, y, playerWidth, playerHeight);
         document.removeEventListener("keydown", displayMainScreen);
         document.removeEventListener("keydown", displayHighScoreBoard);
         document.removeEventListener(event.type, arguments.callee);
@@ -120,8 +121,21 @@ document.addEventListener("keydown", (event) => {
         backgroundMusic.play();
         backgroundMusic.loop();*/
     }
-});
+}
 
+//Set Directions for player to move in
+
+let direction;
+
+document.addEventListener("keydown", setDirection);
+
+function setDirection(event) {
+    let key = event.keyCode;
+    if (key == 39) direction = "right";
+    if (key == 37) direction = "left";
+    if (key == 40) direction = "down";
+    if (key == 38) direction = "up";
+}
 //Initial Position of Obstacles
 
 const obstacles = {
@@ -153,7 +167,7 @@ const obstacles = {
 
 //Draw Everything to canvas
 
-function draw(playerWidth, playerHeight) {
+function draw(x, y, playerWidth, playerHeight) {
 
     //Spawning Obstacles
 
@@ -168,7 +182,7 @@ function draw(playerWidth, playerHeight) {
     ctx.drawImage(bomb, obstacles[3].x, obstacles[3].y, 20, 20);
 
     ctx.fillStyle = "black";
-    ctx.fillRect(x, y, 20, 20);
+    ctx.fillRect(x, y, playerWidth, playerHeight);
 
     //Respawn Obstacles 
 
@@ -274,68 +288,48 @@ function draw(playerWidth, playerHeight) {
     announceLevel()
     gameOver();
     writeScore();
-    requestAnimationFrame(() => draw(playerWidth, playerHeight));
-}
+    callDraw = requestAnimationFrame(() => draw(x, y, playerWidth, playerHeight));
 
-//Movements
+    //Movements
 
-function movements(event) {
-    var key = event.keyCode;
-    if (key == 39 && x <= 495) {
+    if (direction == "right") {
         moveRight();
+        direction = "";
     }
-    if (key == 37 && x >= 5) {
+    if (direction == "left") {
         moveLeft();
+        direction = "";
     }
-    if (key == 40 && y <= 295) {
+    if (direction == "down") {
         moveDown();
+        direction = "";
     }
-    if (key == 38 && y >= 5) {
+    if (direction == "up") {
         moveUp();
+        direction = "";
     }
-    announceLevel();
-}
 
-//Assigning keys to each movement
+    //Assigning keys to each movement
 
-function moveRight() {
-    x += 5;
-    redrawEverything();
-    right.play();
-}
+    function moveRight() {
+        x += 5;
+        right.play();
+    }
 
-function moveLeft() {
-    x -= 5;
-    redrawEverything();
-    left.play();
-}
+    function moveLeft() {
+        x -= 5;
+        left.play();
+    }
 
-function moveUp() {
-    y -= 5;
-    redrawEverything();
-    up.play();
-}
+    function moveUp() {
+        y -= 5;
+        up.play();
+    }
 
-function moveDown() {
-    y += 5;
-    redrawEverything();
-    down.play();
-}
-
-//Function to Redraw Everything
-
-function redrawEverything() {
-    ctx.clearRect(0, 0, 520, 320);
-    ctx.drawImage(background, 0, 0, 520, 320);
-    ctx.drawImage(bomb, obstacles[1].x, obstacles[1].y, 20, 20);
-    ctx.drawImage(bomb, obstacles[2].x, obstacles[2].y, 20, 20);
-    ctx.drawImage(bomb, obstacles[3].x, obstacles[3].y, 20, 20);
-    ctx.fillStyle = "black";
-    ctx.fillRect(x, y, playerWidth, playerHeight);
-
-    if (score >= 30) ctx.drawImage(bomb, obstacles[4].x, obstacles[4].y, 20, 20);
-    if (score >= 60) ctx.drawImage(bomb, obstacles[5].x, obstacles[5].y, 20, 20);
-    if (score >= 100) ctx.drawImage(bomb, obstacles[6].x, obstacles[6].y, 20, 20);
+    function moveDown() {
+        y += 5;
+        down.play();
+    }
 }
 
 //Level Announcement
@@ -358,9 +352,8 @@ function announceLevel() {
 
 function gameOver() {
     if (playerIsTouchingObstacle || playerIsTouchingObstacle2 || playerIsTouchingObstacle3 || playerIsTouchingObstacle4 || playerIsTouchingObstacle5 || playerIsTouchingObstacle6) {
-        cancelAnimationFrame(draw);
-        draw = {};
-        document.removeEventListener("keydown", movements);
+        cancelAnimationFrame(callDraw);
+        document.removeEventListener("keydown", setDirection);
         ctx.clearRect(0, 0, 520, 320);
         ctx.drawImage(background, 0, 0, 520, 320);
         ctx.fillStyle = "black";
@@ -376,6 +369,8 @@ function gameOver() {
         ctx.clearRect(0, 320, 520, 40);
         ctx.drawImage(footground, 0, 320, 520, 40);
         lose.play();
+        document.addEventListener("keydown", startGame);
+        score = 0;
         return "Game Over";
     }
 }
@@ -390,10 +385,3 @@ function writeScore() {
     ctx.font = "25px Changa";
     ctx.fillText("Score: " + score, 20, 347.5);
 }
-
-// Restart Game
-
-document.addEventListener("keydown", () => {
-    let key = event.keyCode;
-    if (key == 13) draw(playerWidth, playerHeight)
-});
