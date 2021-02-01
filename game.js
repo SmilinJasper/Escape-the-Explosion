@@ -167,7 +167,7 @@ const obstacles = {
 
 //Draw Everything to canvas
 
-function draw(x, y, playerWidth, playerHeight) {
+let draw = (x, y, playerWidth, playerHeight) => {
 
     //Spawning Obstacles
 
@@ -285,11 +285,6 @@ function draw(x, y, playerWidth, playerHeight) {
     playerIsTouchingObstacle5 = (x + 19 >= obstacles[5].x && x + 19 <= obstacles[5].x + 38 && y - 19 <= obstacles[5].y && y - 19 > obstacles[5].y - 38);;
     playerIsTouchingObstacle6 = (x + 19 >= obstacles[6].x && x + 19 <= obstacles[6].x + 38 && y - 19 <= obstacles[6].y && y - 19 > obstacles[6].y - 38);;
 
-    announceLevel()
-    gameOver();
-    writeScore();
-    callDraw = requestAnimationFrame(() => draw(x, y, playerWidth, playerHeight));
-
     //Movements
 
     if (direction == "right") {
@@ -330,6 +325,11 @@ function draw(x, y, playerWidth, playerHeight) {
         y += 5;
         down.play();
     }
+
+    announceLevel()
+    gameOver();
+    writeScore();
+    callDraw = requestAnimationFrame(() => draw(x, y, playerWidth, playerHeight));
 }
 
 //Level Announcement
@@ -348,11 +348,23 @@ function announceLevel() {
     if (score == 100) writeLevel("LEVEL 4");
 }
 
+//Wrting and updating score
+
+function writeScore() {
+    ctx.clearRect(0, 320, 520, 40);
+    ctx.drawImage(footground, 0, 320, 520, 40);
+    ctx.fillStyle = "white";
+    ctx.textAlign = "start";
+    ctx.font = "25px Changa";
+    ctx.fillText("Score: " + score, 20, 347.5);
+}
+
 //Game Over
 
 function gameOver() {
     if (playerIsTouchingObstacle || playerIsTouchingObstacle2 || playerIsTouchingObstacle3 || playerIsTouchingObstacle4 || playerIsTouchingObstacle5 || playerIsTouchingObstacle6) {
         cancelAnimationFrame(callDraw);
+        draw = () => {};
         document.removeEventListener("keydown", setDirection);
         ctx.clearRect(0, 0, 520, 320);
         ctx.drawImage(background, 0, 0, 520, 320);
@@ -373,15 +385,4 @@ function gameOver() {
         score = 0;
         return "Game Over";
     }
-}
-
-//Wrting and updating score
-
-function writeScore() {
-    ctx.clearRect(0, 320, 520, 40);
-    ctx.drawImage(footground, 0, 320, 520, 40);
-    ctx.fillStyle = "white";
-    ctx.textAlign = "start";
-    ctx.font = "25px Changa";
-    ctx.fillText("Score: " + score, 20, 347.5);
 }
