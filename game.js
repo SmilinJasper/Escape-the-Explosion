@@ -327,10 +327,13 @@ let draw = (x, y, playerWidth, playerHeight) => {
     }
 
     announceLevel()
-    gameOver();
     writeScore();
-    callDraw = requestAnimationFrame(() => draw(x, y, playerWidth, playerHeight));
+    gameOver();
+    callDrawId = requestAnimationFrame(() => callDraw(x, y, playerWidth, playerHeight));
 }
+
+let callDrawId;
+let callDraw = (x, y, playerWidth, playerHeight) => draw(x, y, playerWidth, playerHeight);
 
 //Level Announcement
 
@@ -363,8 +366,7 @@ function writeScore() {
 
 function gameOver() {
     if (playerIsTouchingObstacle || playerIsTouchingObstacle2 || playerIsTouchingObstacle3 || playerIsTouchingObstacle4 || playerIsTouchingObstacle5 || playerIsTouchingObstacle6) {
-        cancelAnimationFrame(callDraw);
-        draw = () => {};
+        cancelAnimationFrame(callDrawId);
         document.removeEventListener("keydown", setDirection);
         ctx.clearRect(0, 0, 520, 320);
         ctx.drawImage(background, 0, 0, 520, 320);
