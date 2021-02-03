@@ -112,7 +112,8 @@ document.addEventListener("keydown", startGame);
 function startGame(event) {
     var key = event.keyCode;
     if (key == 13) {
-        draw(x, y, playerWidth, playerHeight);
+        draw(x, y, playerWidth, playerHeight, obstacles);
+        document.addEventListener("keydown", setDirection);
         document.removeEventListener("keydown", displayMainScreen);
         document.removeEventListener("keydown", displayHighScoreBoard);
         document.removeEventListener(event.type, arguments.callee);
@@ -127,8 +128,6 @@ function startGame(event) {
 
 let direction;
 
-document.addEventListener("keydown", setDirection);
-
 function setDirection(event) {
     let key = event.keyCode;
     if (key == 39) direction = "right";
@@ -136,6 +135,7 @@ function setDirection(event) {
     if (key == 40) direction = "down";
     if (key == 38) direction = "up";
 }
+
 //Initial Position of Obstacles
 
 const obstacles = {
@@ -167,68 +167,71 @@ const obstacles = {
 
 //Draw Everything to canvas
 
-let draw = (x, y, playerWidth, playerHeight) => {
-
+let draw = (x, y, playerWidth, playerHeight, obstaclesObject) => {
+    let obs = {...obstaclesObject };
+    console.log(obs[1].y, obstacles[1].y);
     //Spawning Obstacles
 
-    obstacles[1].y += speed;
-    obstacles[2].y += speed;
-    obstacles[3].y += speed;
+    obs[1].y += speed;
+    obs[2].y += speed;
+    obs[3].y += speed;
+
+    console.log(obs[1].y, obstacles[1].y);
 
     ctx.clearRect(0, 0, 520, 320);
     ctx.drawImage(background, 0, 0, 520, 320);
-    ctx.drawImage(bomb, obstacles[1].x, obstacles[1].y, 20, 20);
-    ctx.drawImage(bomb, obstacles[2].x, obstacles[2].y, 20, 20);
-    ctx.drawImage(bomb, obstacles[3].x, obstacles[3].y, 20, 20);
+    ctx.drawImage(bomb, obs[1].x, obs[1].y, 20, 20);
+    ctx.drawImage(bomb, obs[2].x, obs[2].y, 20, 20);
+    ctx.drawImage(bomb, obs[3].x, obs[3].y, 20, 20);
 
     ctx.fillStyle = "black";
     ctx.fillRect(x, y, playerWidth, playerHeight);
 
     //Respawn Obstacles 
 
-    if (obstacles[1].y == 300) {
+    if (obs[1].y == 300) {
         scoreAudio.play();
         score += 3;
         if (score < 30) {
-            obstacles[1].x = Math.floor(Math.random() * 169);
-            obstacles[1].y = 0;
-            obstacles[2].x = Math.floor((Math.random() * (320 - 189) + 189));
-            obstacles[2].y = 0;
-            obstacles[3].x = Math.floor(Math.random() * (500 - 340) + 340);
-            obstacles[3].y = 0;
+            obs[1].x = Math.floor(Math.random() * 169);
+            obs[1].y = 0;
+            obs[2].x = Math.floor((Math.random() * (320 - 189) + 189));
+            obs[2].y = 0;
+            obs[3].x = Math.floor(Math.random() * (500 - 340) + 340);
+            obs[3].y = 0;
         } else if (score < 60) {
-            obstacles[1].x = Math.floor(Math.random() * 125);
-            obstacles[1].y = 0;
-            obstacles[2].x = Math.floor((Math.random() * (250 - 145) + 145));
-            obstacles[2].y = 0;
-            obstacles[3].x = Math.floor(Math.random() * (375 - 270) + 270);
-            obstacles[3].y = 0;
-            obstacles[4].x = Math.floor(Math.random() * (500 - 395) + 395);
-            obstacles[4].y = 0;
+            obs[1].x = Math.floor(Math.random() * 125);
+            obs[1].y = 0;
+            obs[2].x = Math.floor((Math.random() * (250 - 145) + 145));
+            obs[2].y = 0;
+            obs[3].x = Math.floor(Math.random() * (375 - 270) + 270);
+            obs[3].y = 0;
+            obs[4].x = Math.floor(Math.random() * (500 - 395) + 395);
+            obs[4].y = 0;
         } else if (score < 100) {
-            obstacles[1].x = Math.floor(Math.random() * 100);
-            obstacles[1].y = 0;
-            obstacles[2].x = Math.floor((Math.random() * (200 - 120) + 120));
-            obstacles[2].y = 0;
-            obstacles[3].x = Math.floor(Math.random() * (300 - 220) + 220);
-            obstacles[3].y = 0;
-            obstacles[4].x = Math.floor(Math.random() * (400 - 320) + 320);
-            obstacles[4].y = 0;
-            obstacles[5].x = Math.floor(Math.random() * (500 - 420) + 420);
-            obstacles[5].y = 0;
+            obs[1].x = Math.floor(Math.random() * 100);
+            obs[1].y = 0;
+            obs[2].x = Math.floor((Math.random() * (200 - 120) + 120));
+            obs[2].y = 0;
+            obs[3].x = Math.floor(Math.random() * (300 - 220) + 220);
+            obs[3].y = 0;
+            obs[4].x = Math.floor(Math.random() * (400 - 320) + 320);
+            obs[4].y = 0;
+            obs[5].x = Math.floor(Math.random() * (500 - 420) + 420);
+            obs[5].y = 0;
         } else {
-            obstacles[1].x = Math.floor(Math.random() * 80);
-            obstacles[1].y = 0;
-            obstacles[2].x = Math.floor((Math.random() * (160 - 100) + 100));
-            obstacles[2].y = 0;
-            obstacles[3].x = Math.floor(Math.random() * (240 - 180) + 180);
-            obstacles[3].y = 0;
-            obstacles[4].x = Math.floor(Math.random() * (320 - 260) + 260);
-            obstacles[4].y = 0;
-            obstacles[5].x = Math.floor(Math.random() * (400 - 340) + 340);
-            obstacles[5].y = 0;
-            obstacles[6].x = Math.floor(Math.random() * (500 - 420) + 420);
-            obstacles[6].y = 0;
+            obs[1].x = Math.floor(Math.random() * 80);
+            obs[1].y = 0;
+            obs[2].x = Math.floor((Math.random() * (160 - 100) + 100));
+            obs[2].y = 0;
+            obs[3].x = Math.floor(Math.random() * (240 - 180) + 180);
+            obs[3].y = 0;
+            obs[4].x = Math.floor(Math.random() * (320 - 260) + 260);
+            obs[4].y = 0;
+            obs[5].x = Math.floor(Math.random() * (400 - 340) + 340);
+            obs[5].y = 0;
+            obs[6].x = Math.floor(Math.random() * (500 - 420) + 420);
+            obs[6].y = 0;
         }
     }
 
@@ -236,19 +239,19 @@ let draw = (x, y, playerWidth, playerHeight) => {
         speed = 1.5;
     } else if (score < 60) {
         speed = 2;
-        ctx.drawImage(bomb, obstacles[4].x, obstacles[4].y, 20, 20);
-        obstacles[4].y += speed;
+        ctx.drawImage(bomb, obs[4].x, obs[4].y, 20, 20);
+        obs[4].y += speed;
     } else if (score < 100) {
         speed = 2.5;
         for (let i = 4; i <= 5; i++) {
-            ctx.drawImage(bomb, obstacles[i].x, obstacles[i].y, 20, 20);
-            obstacles[i].y += speed;
+            ctx.drawImage(bomb, obs[i].x, obs[i].y, 20, 20);
+            obs[i].y += speed;
         }
     } else {
         speed = 3;
         for (let i = 4; i <= 6; i++) {
-            ctx.drawImage(bomb, obstacles[i].x, obstacles[i].y, 20, 20);
-            obstacles[i].y += speed;
+            ctx.drawImage(bomb, obs[i].x, obs[i].y, 20, 20);
+            obs[i].y += speed;
         }
     }
 
@@ -275,15 +278,6 @@ let draw = (x, y, playerWidth, playerHeight) => {
         localStorage.setItem("thirdHighscore", score);
         thirdHighscore = localStorage.getItem("thirdHighscore");
     }
-
-    //Logic for Game Over
-
-    playerIsTouchingObstacle = (x + 19 >= obstacles[1].x && x + 19 <= obstacles[1].x + 38 && y - 19 <= obstacles[1].y && y - 19 > obstacles[1].y - 38);
-    playerIsTouchingObstacle2 = (x + 19 >= obstacles[2].x && x + 19 <= obstacles[2].x + 38 && y - 19 <= obstacles[2].y && y - 19 > obstacles[2].y - 38);
-    playerIsTouchingObstacle3 = (x + 19 >= obstacles[3].x && x + 19 <= obstacles[3].x + 38 && y - 19 <= obstacles[3].y && y - 19 > obstacles[3].y - 38);
-    playerIsTouchingObstacle4 = (x + 19 >= obstacles[4].x && x + 19 <= obstacles[4].x + 38 && y - 19 <= obstacles[4].y && y - 19 > obstacles[4].y - 38);;
-    playerIsTouchingObstacle5 = (x + 19 >= obstacles[5].x && x + 19 <= obstacles[5].x + 38 && y - 19 <= obstacles[5].y && y - 19 > obstacles[5].y - 38);;
-    playerIsTouchingObstacle6 = (x + 19 >= obstacles[6].x && x + 19 <= obstacles[6].x + 38 && y - 19 <= obstacles[6].y && y - 19 > obstacles[6].y - 38);;
 
     //Movements
 
@@ -328,7 +322,7 @@ let draw = (x, y, playerWidth, playerHeight) => {
 
     announceLevel()
     writeScore();
-    gameOver(x, y, playerWidth, playerHeight);
+    gameOver(x, y, playerWidth, playerHeight, obs);
 }
 
 //Level Announcement
@@ -358,10 +352,19 @@ function writeScore() {
     ctx.fillText("Score: " + score, 20, 347.5);
 }
 
-//Game Over
+//Game Over Effects and What to do if Game is Not Over
 
-function gameOver(x, y, playerWidth, playerHeight) {
-    if (playerIsTouchingObstacle || playerIsTouchingObstacle2 || playerIsTouchingObstacle3 || playerIsTouchingObstacle4 || playerIsTouchingObstacle5 || playerIsTouchingObstacle6) {
+function gameOver(x, y, playerWidth, playerHeight, obstaclesObject) {
+    //Logic for Game Over
+
+    let playerIsTouchingObstacle1 = (x + 19 >= obstaclesObject[1].x && x + 19 <= obstaclesObject[1].x + 38 && y - 19 <= obstaclesObject[1].y && y - 19 > obstaclesObject[1].y - 38);
+    let playerIsTouchingObstacle2 = (x + 19 >= obstaclesObject[2].x && x + 19 <= obstaclesObject[2].x + 38 && y - 19 <= obstaclesObject[2].y && y - 19 > obstaclesObject[2].y - 38);
+    let playerIsTouchingObstacle3 = (x + 19 >= obstaclesObject[3].x && x + 19 <= obstaclesObject[3].x + 38 && y - 19 <= obstaclesObject[3].y && y - 19 > obstaclesObject[3].y - 38);
+    let playerIsTouchingObstacle4 = (x + 19 >= obstaclesObject[4].x && x + 19 <= obstaclesObject[4].x + 38 && y - 19 <= obstaclesObject[4].y && y - 19 > obstaclesObject[4].y - 38);;
+    let playerIsTouchingObstacle5 = (x + 19 >= obstaclesObject[5].x && x + 19 <= obstaclesObject[5].x + 38 && y - 19 <= obstaclesObject[5].y && y - 19 > obstaclesObject[5].y - 38);;
+    let playerIsTouchingObstacle6 = (x + 19 >= obstaclesObject[6].x && x + 19 <= obstaclesObject[6].x + 38 && y - 19 <= obstaclesObject[6].y && y - 19 > obstaclesObject[6].y - 38);;
+
+    if (playerIsTouchingObstacle1 || playerIsTouchingObstacle2 || playerIsTouchingObstacle3 || playerIsTouchingObstacle4 || playerIsTouchingObstacle5 || playerIsTouchingObstacle6) {
         document.removeEventListener("keydown", setDirection);
         ctx.clearRect(0, 0, 520, 320);
         ctx.drawImage(background, 0, 0, 520, 320);
@@ -381,5 +384,5 @@ function gameOver(x, y, playerWidth, playerHeight) {
         document.addEventListener("keydown", startGame);
         score = 0;
         return "Game Over";
-    } else requestAnimationFrame(() => draw(x, y, playerWidth, playerHeight));
+    } else requestAnimationFrame(() => draw(x, y, playerWidth, playerHeight, obstaclesObject));
 }
