@@ -107,10 +107,13 @@ let thirdHighscore = localStorage.getItem("thirdHighscore");
 
 // Start Key
 
-document.addEventListener("keydown", (event) => {
+document.addEventListener("keydown", startGame);
+
+function startGame(event) {
     var key = event.keyCode;
     if (key == 13) {
-        draw(playerWidth, playerHeight);
+        draw(x, y, playerWidth, playerHeight, obstacles);
+        document.addEventListener("keydown", setDirection);
         document.removeEventListener("keydown", displayMainScreen);
         document.removeEventListener("keydown", displayHighScoreBoard);
         document.removeEventListener(event.type, arguments.callee);
@@ -119,7 +122,19 @@ document.addEventListener("keydown", (event) => {
         backgroundMusic.play();
         backgroundMusic.loop();*/
     }
-});
+}
+
+//Set Directions for player to move in
+
+let direction;
+
+function setDirection(event) {
+    let key = event.keyCode;
+    if (key == 39) direction = "right";
+    if (key == 37) direction = "left";
+    if (key == 40) direction = "down";
+    if (key == 38) direction = "up";
+}
 
 //Initial Position of Obstacles
 
@@ -152,68 +167,72 @@ const obstacles = {
 
 //Draw Everything to canvas
 
-function draw(playerWidth, playerHeight) {
+let draw = (x, y, playerWidth, playerHeight, obstaclesObject) => {
+    obstaclesObject = JSON.parse(JSON.stringify(obstaclesObject));
+    console.log(obstaclesObject[1].y, obstacles[1].y);
 
     //Spawning Obstacles
 
-    obstacles[1].y += speed;
-    obstacles[2].y += speed;
-    obstacles[3].y += speed;
+    obstaclesObject[1].y += speed;
+    obstaclesObject[2].y += speed;
+    obstaclesObject[3].y += speed;
+
+    console.log(obstaclesObject[1].y, obstacles[1].y);
 
     ctx.clearRect(0, 0, 520, 320);
     ctx.drawImage(background, 0, 0, 520, 320);
-    ctx.drawImage(bomb, obstacles[1].x, obstacles[1].y, 20, 20);
-    ctx.drawImage(bomb, obstacles[2].x, obstacles[2].y, 20, 20);
-    ctx.drawImage(bomb, obstacles[3].x, obstacles[3].y, 20, 20);
+    ctx.drawImage(bomb, obstaclesObject[1].x, obstaclesObject[1].y, 20, 20);
+    ctx.drawImage(bomb, obstaclesObject[2].x, obstaclesObject[2].y, 20, 20);
+    ctx.drawImage(bomb, obstaclesObject[3].x, obstaclesObject[3].y, 20, 20);
 
     ctx.fillStyle = "black";
-    ctx.fillRect(x, y, 20, 20);
+    ctx.fillRect(x, y, playerWidth, playerHeight);
 
     //Respawn Obstacles 
 
-    if (obstacles[1].y == 300) {
+    if (obstaclesObject[1].y == 300) {
         scoreAudio.play();
         score += 3;
         if (score < 30) {
-            obstacles[1].x = Math.floor(Math.random() * 169);
-            obstacles[1].y = 0;
-            obstacles[2].x = Math.floor((Math.random() * (320 - 189) + 189));
-            obstacles[2].y = 0;
-            obstacles[3].x = Math.floor(Math.random() * (500 - 340) + 340);
-            obstacles[3].y = 0;
+            obstaclesObject[1].x = Math.floor(Math.random() * 169);
+            obstaclesObject[1].y = 0;
+            obstaclesObject[2].x = Math.floor((Math.random() * (320 - 189) + 189));
+            obstaclesObject[2].y = 0;
+            obstaclesObject[3].x = Math.floor(Math.random() * (500 - 340) + 340);
+            obstaclesObject[3].y = 0;
         } else if (score < 60) {
-            obstacles[1].x = Math.floor(Math.random() * 125);
-            obstacles[1].y = 0;
-            obstacles[2].x = Math.floor((Math.random() * (250 - 145) + 145));
-            obstacles[2].y = 0;
-            obstacles[3].x = Math.floor(Math.random() * (375 - 270) + 270);
-            obstacles[3].y = 0;
-            obstacles[4].x = Math.floor(Math.random() * (500 - 395) + 395);
-            obstacles[4].y = 0;
+            obstaclesObject[1].x = Math.floor(Math.random() * 125);
+            obstaclesObject[1].y = 0;
+            obstaclesObject[2].x = Math.floor((Math.random() * (250 - 145) + 145));
+            obstaclesObject[2].y = 0;
+            obstaclesObject[3].x = Math.floor(Math.random() * (375 - 270) + 270);
+            obstaclesObject[3].y = 0;
+            obstaclesObject[4].x = Math.floor(Math.random() * (500 - 395) + 395);
+            obstaclesObject[4].y = 0;
         } else if (score < 100) {
-            obstacles[1].x = Math.floor(Math.random() * 100);
-            obstacles[1].y = 0;
-            obstacles[2].x = Math.floor((Math.random() * (200 - 120) + 120));
-            obstacles[2].y = 0;
-            obstacles[3].x = Math.floor(Math.random() * (300 - 220) + 220);
-            obstacles[3].y = 0;
-            obstacles[4].x = Math.floor(Math.random() * (400 - 320) + 320);
-            obstacles[4].y = 0;
-            obstacles[5].x = Math.floor(Math.random() * (500 - 420) + 420);
-            obstacles[5].y = 0;
+            obstaclesObject[1].x = Math.floor(Math.random() * 100);
+            obstaclesObject[1].y = 0;
+            obstaclesObject[2].x = Math.floor((Math.random() * (200 - 120) + 120));
+            obstaclesObject[2].y = 0;
+            obstaclesObject[3].x = Math.floor(Math.random() * (300 - 220) + 220);
+            obstaclesObject[3].y = 0;
+            obstaclesObject[4].x = Math.floor(Math.random() * (400 - 320) + 320);
+            obstaclesObject[4].y = 0;
+            obstaclesObject[5].x = Math.floor(Math.random() * (500 - 420) + 420);
+            obstaclesObject[5].y = 0;
         } else {
-            obstacles[1].x = Math.floor(Math.random() * 80);
-            obstacles[1].y = 0;
-            obstacles[2].x = Math.floor((Math.random() * (160 - 100) + 100));
-            obstacles[2].y = 0;
-            obstacles[3].x = Math.floor(Math.random() * (240 - 180) + 180);
-            obstacles[3].y = 0;
-            obstacles[4].x = Math.floor(Math.random() * (320 - 260) + 260);
-            obstacles[4].y = 0;
-            obstacles[5].x = Math.floor(Math.random() * (400 - 340) + 340);
-            obstacles[5].y = 0;
-            obstacles[6].x = Math.floor(Math.random() * (500 - 420) + 420);
-            obstacles[6].y = 0;
+            obstaclesObject[1].x = Math.floor(Math.random() * 80);
+            obstaclesObject[1].y = 0;
+            obstaclesObject[2].x = Math.floor((Math.random() * (160 - 100) + 100));
+            obstaclesObject[2].y = 0;
+            obstaclesObject[3].x = Math.floor(Math.random() * (240 - 180) + 180);
+            obstaclesObject[3].y = 0;
+            obstaclesObject[4].x = Math.floor(Math.random() * (320 - 260) + 260);
+            obstaclesObject[4].y = 0;
+            obstaclesObject[5].x = Math.floor(Math.random() * (400 - 340) + 340);
+            obstaclesObject[5].y = 0;
+            obstaclesObject[6].x = Math.floor(Math.random() * (500 - 420) + 420);
+            obstaclesObject[6].y = 0;
         }
     }
 
@@ -221,19 +240,19 @@ function draw(playerWidth, playerHeight) {
         speed = 1.5;
     } else if (score < 60) {
         speed = 2;
-        ctx.drawImage(bomb, obstacles[4].x, obstacles[4].y, 20, 20);
-        obstacles[4].y += speed;
+        ctx.drawImage(bomb, obstaclesObject[4].x, obstaclesObject[4].y, 20, 20);
+        obstaclesObject[4].y += speed;
     } else if (score < 100) {
         speed = 2.5;
         for (let i = 4; i <= 5; i++) {
-            ctx.drawImage(bomb, obstacles[i].x, obstacles[i].y, 20, 20);
-            obstacles[i].y += speed;
+            ctx.drawImage(bomb, obstaclesObject[i].x, obstaclesObject[i].y, 20, 20);
+            obstaclesObject[i].y += speed;
         }
     } else {
         speed = 3;
         for (let i = 4; i <= 6; i++) {
-            ctx.drawImage(bomb, obstacles[i].x, obstacles[i].y, 20, 20);
-            obstacles[i].y += speed;
+            ctx.drawImage(bomb, obstaclesObject[i].x, obstaclesObject[i].y, 20, 20);
+            obstaclesObject[i].y += speed;
         }
     }
 
@@ -261,75 +280,50 @@ function draw(playerWidth, playerHeight) {
         thirdHighscore = localStorage.getItem("thirdHighscore");
     }
 
-    //Logic for Game Over
+    //Movements
 
-    playerIsTouchingObstacle = (x + 19 >= obstacles[1].x && x + 19 <= obstacles[1].x + 38 && y - 19 <= obstacles[1].y && y - 19 > obstacles[1].y - 38);
-    playerIsTouchingObstacle2 = (x + 19 >= obstacles[2].x && x + 19 <= obstacles[2].x + 38 && y - 19 <= obstacles[2].y && y - 19 > obstacles[2].y - 38);
-    playerIsTouchingObstacle3 = (x + 19 >= obstacles[3].x && x + 19 <= obstacles[3].x + 38 && y - 19 <= obstacles[3].y && y - 19 > obstacles[3].y - 38);
-    playerIsTouchingObstacle4 = (x + 19 >= obstacles[4].x && x + 19 <= obstacles[4].x + 38 && y - 19 <= obstacles[4].y && y - 19 > obstacles[4].y - 38);;
-    playerIsTouchingObstacle5 = (x + 19 >= obstacles[5].x && x + 19 <= obstacles[5].x + 38 && y - 19 <= obstacles[5].y && y - 19 > obstacles[5].y - 38);;
-    playerIsTouchingObstacle6 = (x + 19 >= obstacles[6].x && x + 19 <= obstacles[6].x + 38 && y - 19 <= obstacles[6].y && y - 19 > obstacles[6].y - 38);;
+    if (direction == "right") {
+        moveRight();
+        direction = "";
+    }
+    if (direction == "left") {
+        moveLeft();
+        direction = "";
+    }
+    if (direction == "down") {
+        moveDown();
+        direction = "";
+    }
+    if (direction == "up") {
+        moveUp();
+        direction = "";
+    }
+
+    //Assigning keys to each movement
+
+    function moveRight() {
+        x += 5;
+        right.play();
+    }
+
+    function moveLeft() {
+        x -= 5;
+        left.play();
+    }
+
+    function moveUp() {
+        y -= 5;
+        up.play();
+    }
+
+    function moveDown() {
+        y += 5;
+        down.play();
+    }
 
     announceLevel()
-    gameOver();
     writeScore();
-    requestAnimationFrame(() => { draw(playerWidth, playerHeight) });
-    console.log("Play");
-}
-
-//Movements
-
-document.addEventListener("keydown", movements)
-
-function movements(event) {
-    var key = event.keyCode;
-    if (key == 39 && x <= 495) moveRight();
-    if (key == 37 && x >= 5) moveLeft();
-    if (key == 40 && y <= 295) moveDown();
-    if (key == 38 && y >= 5) moveUp();
-    announceLevel();
-}
-
-//Assigning keys to each movement
-
-function moveRight() {
-    redrawEverything();
-    x += 5;
-    right.play();
-}
-
-function moveLeft() {
-    redrawEverything();
-    x -= 5;
-    left.play();
-}
-
-function moveUp() {
-    redrawEverything();
-    y -= 5;
-    up.play();
-}
-
-function moveDown() {
-    redrawEverything();
-    y += 5;
-    down.play();
-}
-
-//Function to Redraw Everything
-
-function redrawEverything() {
-    ctx.clearRect(0, 0, 520, 320);
-    ctx.drawImage(background, 0, 0, 520, 320);
-    ctx.drawImage(bomb, obstacles[1].x, obstacles[1].y, 20, 20);
-    ctx.drawImage(bomb, obstacles[2].x, obstacles[2].y, 20, 20);
-    ctx.drawImage(bomb, obstacles[3].x, obstacles[3].y, 20, 20);
-    ctx.fillStyle = "black";
-    ctx.fillRect(x, y, playerWidth, playerHeight);
-
-    if (score >= 30) ctx.drawImage(bomb, obstacles[4].x, obstacles[4].y, 20, 20);
-    if (score >= 60) ctx.drawImage(bomb, obstacles[5].x, obstacles[5].y, 20, 20);
-    if (score >= 100) ctx.drawImage(bomb, obstacles[6].x, obstacles[6].y, 20, 20);
+    gameOver(x, y, playerWidth, playerHeight, obstaclesObject);
 }
 
 //Level Announcement
@@ -348,13 +342,31 @@ function announceLevel() {
     if (score == 100) writeLevel("LEVEL 4");
 }
 
-//Game Over
+//Wrting and updating score
 
-function gameOver() {
-    if (playerIsTouchingObstacle || playerIsTouchingObstacle2 || playerIsTouchingObstacle3 || playerIsTouchingObstacle4 || playerIsTouchingObstacle5 || playerIsTouchingObstacle6) {
-        cancelAnimationFrame(draw);
-        draw = {};
-        document.removeEventListener("keydown", movements);
+function writeScore() {
+    ctx.clearRect(0, 320, 520, 40);
+    ctx.drawImage(footground, 0, 320, 520, 40);
+    ctx.fillStyle = "white";
+    ctx.textAlign = "start";
+    ctx.font = "25px Changa";
+    ctx.fillText("Score: " + score, 20, 347.5);
+}
+
+//Game Over Effects and What to do if Game is Not Over
+
+function gameOver(x, y, playerWidth, playerHeight, obstaclesObject) {
+    //Logic for Game Over
+
+    let playerIsTouchingObstacle1 = (x + 19 >= obstaclesObject[1].x && x + 19 <= obstaclesObject[1].x + 38 && y - 19 <= obstaclesObject[1].y && y - 19 > obstaclesObject[1].y - 38);
+    let playerIsTouchingObstacle2 = (x + 19 >= obstaclesObject[2].x && x + 19 <= obstaclesObject[2].x + 38 && y - 19 <= obstaclesObject[2].y && y - 19 > obstaclesObject[2].y - 38);
+    let playerIsTouchingObstacle3 = (x + 19 >= obstaclesObject[3].x && x + 19 <= obstaclesObject[3].x + 38 && y - 19 <= obstaclesObject[3].y && y - 19 > obstaclesObject[3].y - 38);
+    let playerIsTouchingObstacle4 = (x + 19 >= obstaclesObject[4].x && x + 19 <= obstaclesObject[4].x + 38 && y - 19 <= obstaclesObject[4].y && y - 19 > obstaclesObject[4].y - 38);;
+    let playerIsTouchingObstacle5 = (x + 19 >= obstaclesObject[5].x && x + 19 <= obstaclesObject[5].x + 38 && y - 19 <= obstaclesObject[5].y && y - 19 > obstaclesObject[5].y - 38);;
+    let playerIsTouchingObstacle6 = (x + 19 >= obstaclesObject[6].x && x + 19 <= obstaclesObject[6].x + 38 && y - 19 <= obstaclesObject[6].y && y - 19 > obstaclesObject[6].y - 38);;
+
+    if (playerIsTouchingObstacle1 || playerIsTouchingObstacle2 || playerIsTouchingObstacle3 || playerIsTouchingObstacle4 || playerIsTouchingObstacle5 || playerIsTouchingObstacle6) {
+        document.removeEventListener("keydown", setDirection);
         ctx.clearRect(0, 0, 520, 320);
         ctx.drawImage(background, 0, 0, 520, 320);
         ctx.fillStyle = "black";
@@ -370,24 +382,8 @@ function gameOver() {
         ctx.clearRect(0, 320, 520, 40);
         ctx.drawImage(footground, 0, 320, 520, 40);
         lose.play();
+        document.addEventListener("keydown", startGame);
+        score = 0;
         return "Game Over";
-    }
+    } else requestAnimationFrame(() => draw(x, y, playerWidth, playerHeight, obstaclesObject));
 }
-
-//Wrting and updating score
-
-function writeScore() {
-    ctx.clearRect(0, 320, 520, 40);
-    ctx.drawImage(footground, 0, 320, 520, 40);
-    ctx.fillStyle = "white";
-    ctx.textAlign = "start";
-    ctx.font = "25px Changa";
-    ctx.fillText("Score: " + score, 20, 347.5);
-}
-
-// Restart Game
-
-document.addEventListener("keydown", () => {
-    let key = event.keyCode;
-    if (key == 13) draw(x, y, playerWidth, playerHeight)
-});
