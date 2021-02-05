@@ -5,10 +5,10 @@ const ctx = canvas.getContext("2d");
 
 // Import Images
 
-let bomb = new Image();
-let background = new Image();
-let footground = new Image();
-let backButton = new Image();
+const bomb = new Image();
+const background = new Image();
+const footground = new Image();
+const backButton = new Image();
 
 bomb.src = "img/bomb.png";
 background.src = "img/background.png";
@@ -61,6 +61,7 @@ footground.onload = () => {
 }
 
 //Menu Functions
+
 function displayHighScoreBoard(event) {
     let key = event.keyCode;
     if (key == 72) {
@@ -93,10 +94,10 @@ function displayMainScreen(event) {
     }
 }
 
-//Initial positon and values
+//Initial Positon and Values
 
-let x = 260;
-let y = 300;
+const x = 260;
+const y = 300;
 const playerWidth = 20;
 const playerHeight = 20;
 let score = 0;
@@ -124,7 +125,7 @@ function startGame(event) {
     }
 }
 
-//Set Directions for player to move in
+//Set Directions for Player Movements
 
 let direction;
 
@@ -165,19 +166,16 @@ const obstacles = {
     }
 }
 
-//Draw Everything to canvas
+//Draw Everything to Canvas
 
 let draw = (x, y, playerWidth, playerHeight, obstaclesObject) => {
     obstaclesObject = JSON.parse(JSON.stringify(obstaclesObject));
-    console.log(obstaclesObject[1].y, obstacles[1].y);
 
     //Spawning Obstacles
 
     obstaclesObject[1].y += speed;
     obstaclesObject[2].y += speed;
     obstaclesObject[3].y += speed;
-
-    console.log(obstaclesObject[1].y, obstacles[1].y);
 
     ctx.clearRect(0, 0, 520, 320);
     ctx.drawImage(background, 0, 0, 520, 320);
@@ -280,7 +278,7 @@ let draw = (x, y, playerWidth, playerHeight, obstaclesObject) => {
         thirdHighscore = localStorage.getItem("thirdHighscore");
     }
 
-    //Movements
+    //Calling Player Movements
 
     if (direction == "right") {
         moveRight();
@@ -299,7 +297,7 @@ let draw = (x, y, playerWidth, playerHeight, obstaclesObject) => {
         direction = "";
     }
 
-    //Assigning keys to each movement
+    //Assigning Keys to Each Movement
 
     function moveRight() {
         x += 5;
@@ -321,7 +319,7 @@ let draw = (x, y, playerWidth, playerHeight, obstaclesObject) => {
         down.play();
     }
 
-    announceLevel()
+    announceLevel();
     writeScore();
     gameOver(x, y, playerWidth, playerHeight, obstaclesObject);
 }
