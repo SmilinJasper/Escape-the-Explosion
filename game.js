@@ -58,6 +58,7 @@ background.onload = () => drawStartScreen();
 
 footground.onload = () => {
     ctx.drawImage(footground, 0, 320, 520, 40);
+    document.addEventListener("keydown", startGame);
 }
 
 //Menu Functions
@@ -79,8 +80,9 @@ function displayHighScoreBoard(event) {
         ctx.textAlign = "start";
         ctx.fillText("BACK - BACKSPACE", 10, 310);
         ctx.drawImage(backButton, 10, 10);
-        document.removeEventListener(event.type, displayHighScoreBoard);
         document.addEventListener("keydown", displayMainScreen);
+        document.removeEventListener(event.type, displayHighScoreBoard);
+        document.removeEventListener("keydown", startGame);
     }
 }
 
@@ -90,30 +92,28 @@ function displayMainScreen(event) {
         back.play();
         ctx.clearRect(0, 0, 520, 320);
         drawStartScreen();
+        document.addEventListener("keydown", startGame);
         document.removeEventListener(event.type, displayMainScreen);
     }
 }
 
-//Initial Positon and Values
+//Initial positons and values
 
 const x = 260;
 const y = 300;
 const playerWidth = 20;
 const playerHeight = 20;
-let score = 0;
-let speed = 0;
+const score = 0;
 let highscore = localStorage.getItem("highscore");
 let secondHighscore = localStorage.getItem("secondHighscore");
 let thirdHighscore = localStorage.getItem("thirdHighscore");
 
 // Start Key
 
-document.addEventListener("keydown", startGame);
-
 function startGame(event) {
     var key = event.keyCode;
     if (key == 13) {
-        draw(x, y, playerWidth, playerHeight, obstacles);
+        draw(x, y, playerWidth, playerHeight, obstacles, score);
         document.addEventListener("keydown", setDirection);
         document.removeEventListener("keydown", displayMainScreen);
         document.removeEventListener("keydown", displayHighScoreBoard);
@@ -168,10 +168,14 @@ const obstacles = {
 
 //Draw Everything to Canvas
 
-let draw = (x, y, playerWidth, playerHeight, obstaclesObject) => {
+let draw = (x, y, playerWidth, playerHeight, obstaclesObject, score) => {
+    //Duplicate the object containing obstacles` info
+
     obstaclesObject = JSON.parse(JSON.stringify(obstaclesObject));
 
     //Spawning Obstacles
+
+    let speed = 1.5;
 
     obstaclesObject[1].y += speed;
     obstaclesObject[2].y += speed;
@@ -319,9 +323,9 @@ let draw = (x, y, playerWidth, playerHeight, obstaclesObject) => {
         down.play();
     }
 
-    announceLevel();
-    writeScore();
-    gameOver(x, y, playerWidth, playerHeight, obstaclesObject);
+    announceLevel(score);
+    writeScore(score);
+    gameOver(x, y, playerWidth, playerHeight, obstaclesObject, score);
 }
 
 //Level Announcement
@@ -333,7 +337,7 @@ function writeLevel(level) {
     ctx.fillText(level, 260, 170);
 }
 
-function announceLevel() {
+function announceLevel(score) {
     if (score == 0) writeLevel("LEVEL 1");
     if (score == 30) writeLevel("LEVEL 2");
     if (score == 60) writeLevel("LEVEL 3");
@@ -342,7 +346,7 @@ function announceLevel() {
 
 //Wrting and updating score
 
-function writeScore() {
+function writeScore(score) {
     ctx.clearRect(0, 320, 520, 40);
     ctx.drawImage(footground, 0, 320, 520, 40);
     ctx.fillStyle = "white";
@@ -353,7 +357,7 @@ function writeScore() {
 
 //Game Over Effects and What to do if Game is Not Over
 
-function gameOver(x, y, playerWidth, playerHeight, obstaclesObject) {
+function gameOver(x, y, playerWidth, playerHeight, obstaclesObject, score) {
     //Logic for Game Over
 
     let playerIsTouchingObstacle1 = (x + 19 >= obstaclesObject[1].x && x + 19 <= obstaclesObject[1].x + 38 && y - 19 <= obstaclesObject[1].y && y - 19 > obstaclesObject[1].y - 38);
@@ -381,7 +385,6 @@ function gameOver(x, y, playerWidth, playerHeight, obstaclesObject) {
         ctx.drawImage(footground, 0, 320, 520, 40);
         lose.play();
         document.addEventListener("keydown", startGame);
-        score = 0;
         return "Game Over";
-    } else requestAnimationFrame(() => draw(x, y, playerWidth, playerHeight, obstaclesObject));
+    } else requestAnimationFrame(() => draw(x, y, playerWidth, playerHeight, obstaclesObject, score));
 }
