@@ -3,19 +3,19 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-// Import Images
+// Import images
 
-const bomb = new Image();
+const obstacle = new Image();
 const background = new Image();
 const footground = new Image();
 const backButton = new Image();
 
-bomb.src = "img/bomb.png";
+obstacle.src = "img/obstacle.png";
 background.src = "img/background.png";
 footground.src = "img/footground.jpg";
 backButton.src = " img/back_button.png";
 
-//Import Audio Files
+//Import audio files
 
 const left = new Audio();
 const right = new Audio();
@@ -37,7 +37,7 @@ start.src = "audio/start.ogg";
 select.src = "audio/select.wav";
 back.src = "audio/back.wav";
 
-//Create Background and Footground
+//Create background and footground
 
 function drawStartScreen() {
     ctx.drawImage(background, 0, 0, 520, 320);
@@ -50,7 +50,8 @@ function drawStartScreen() {
     ctx.textAlign = "start";
     ctx.fillText("START - ENTER", 10, 310);
     ctx.textAlign = "end";
-    ctx.fillText("HIGHSCORES - H", 510, 310)
+    ctx.fillText("HIGHSCORES - H", 510, 310);
+    document.addEventListener("keydown", startGame);
     document.addEventListener("keydown", displayHighScoreBoard);
 }
 
@@ -58,10 +59,9 @@ background.onload = () => drawStartScreen();
 
 footground.onload = () => {
     ctx.drawImage(footground, 0, 320, 520, 40);
-    document.addEventListener("keydown", startGame);
 }
 
-//Menu Functions
+//Menu functions
 
 function displayHighScoreBoard(event) {
     let key = event.keyCode;
@@ -92,7 +92,6 @@ function displayMainScreen(event) {
         back.play();
         ctx.clearRect(0, 0, 520, 320);
         drawStartScreen();
-        document.addEventListener("keydown", startGame);
         document.removeEventListener(event.type, displayMainScreen);
     }
 }
@@ -104,28 +103,26 @@ const y = 300;
 const playerWidth = 20;
 const playerHeight = 20;
 const score = 0;
+const speed = 0;
 let highscore = localStorage.getItem("highscore");
 let secondHighscore = localStorage.getItem("secondHighscore");
 let thirdHighscore = localStorage.getItem("thirdHighscore");
 
-// Start Key
+// Start key
 
 function startGame(event) {
     var key = event.keyCode;
     if (key == 13) {
-        draw(x, y, playerWidth, playerHeight, obstacles, score);
+        draw(x, y, playerWidth, playerHeight, obstacles, speed, score);
         document.addEventListener("keydown", setDirection);
         document.removeEventListener("keydown", displayMainScreen);
         document.removeEventListener("keydown", displayHighScoreBoard);
         document.removeEventListener(event.type, arguments.callee);
         start.play();
-        /*backgroundMusic.volume = 0.0;
-        backgroundMusic.play();
-        backgroundMusic.loop();*/
     }
 }
 
-//Set Directions for Player Movements
+//Set directions for player movements
 
 let direction;
 
@@ -137,7 +134,7 @@ function setDirection(event) {
     if (key == 38) direction = "up";
 }
 
-//Initial Position of Obstacles
+//Initial position of obstacles
 
 const obstacles = {
     1: {
@@ -164,101 +161,80 @@ const obstacles = {
         x: Math.floor(Math.random() * (500 - 420) + 420),
         y: 0
     }
-}
+};
 
-//Draw Everything to Canvas
+//Draw everything to canvas
 
-let draw = (x, y, playerWidth, playerHeight, obstaclesObject, score) => {
+let draw = (x, y, playerWidth, playerHeight, obstaclesObject, speed, score) => {
     //Duplicate the object containing obstacles` info
-
     obstaclesObject = JSON.parse(JSON.stringify(obstaclesObject));
 
-    //Spawning Obstacles
-
-    let speed = 1.5;
-
-    obstaclesObject[1].y += speed;
-    obstaclesObject[2].y += speed;
-    obstaclesObject[3].y += speed;
+    //Spawning obstacles
 
     ctx.clearRect(0, 0, 520, 320);
     ctx.drawImage(background, 0, 0, 520, 320);
-    ctx.drawImage(bomb, obstaclesObject[1].x, obstaclesObject[1].y, 20, 20);
-    ctx.drawImage(bomb, obstaclesObject[2].x, obstaclesObject[2].y, 20, 20);
-    ctx.drawImage(bomb, obstaclesObject[3].x, obstaclesObject[3].y, 20, 20);
+    for (let i = 1; i <= 3; i++) ctx.drawImage(obstacle, obstaclesObject[i].x, obstaclesObject[i].y, 20, 20);
+
+    // Draw player
 
     ctx.fillStyle = "black";
     ctx.fillRect(x, y, playerWidth, playerHeight);
 
-    //Respawn Obstacles 
+    //Respawn obstacles 
 
     if (obstaclesObject[1].y == 300) {
         scoreAudio.play();
         score += 3;
         if (score < 30) {
-            obstaclesObject[1].x = Math.floor(Math.random() * 169);
-            obstaclesObject[1].y = 0;
-            obstaclesObject[2].x = Math.floor((Math.random() * (320 - 189) + 189));
-            obstaclesObject[2].y = 0;
-            obstaclesObject[3].x = Math.floor(Math.random() * (500 - 340) + 340);
-            obstaclesObject[3].y = 0;
+            for (let i = 1; i <= 3; i++) obstaclesObject[i].y = 0;
         } else if (score < 60) {
             obstaclesObject[1].x = Math.floor(Math.random() * 125);
-            obstaclesObject[1].y = 0;
             obstaclesObject[2].x = Math.floor((Math.random() * (250 - 145) + 145));
-            obstaclesObject[2].y = 0;
             obstaclesObject[3].x = Math.floor(Math.random() * (375 - 270) + 270);
-            obstaclesObject[3].y = 0;
             obstaclesObject[4].x = Math.floor(Math.random() * (500 - 395) + 395);
-            obstaclesObject[4].y = 0;
+            for (let i = 1; i <= 4; i++) obstaclesObject[i].y = 0;
         } else if (score < 100) {
             obstaclesObject[1].x = Math.floor(Math.random() * 100);
-            obstaclesObject[1].y = 0;
             obstaclesObject[2].x = Math.floor((Math.random() * (200 - 120) + 120));
-            obstaclesObject[2].y = 0;
             obstaclesObject[3].x = Math.floor(Math.random() * (300 - 220) + 220);
-            obstaclesObject[3].y = 0;
             obstaclesObject[4].x = Math.floor(Math.random() * (400 - 320) + 320);
-            obstaclesObject[4].y = 0;
             obstaclesObject[5].x = Math.floor(Math.random() * (500 - 420) + 420);
-            obstaclesObject[5].y = 0;
+            for (let i = 1; i <= 5; i++) obstaclesObject[i].y = 0;
         } else {
             obstaclesObject[1].x = Math.floor(Math.random() * 80);
-            obstaclesObject[1].y = 0;
             obstaclesObject[2].x = Math.floor((Math.random() * (160 - 100) + 100));
-            obstaclesObject[2].y = 0;
             obstaclesObject[3].x = Math.floor(Math.random() * (240 - 180) + 180);
-            obstaclesObject[3].y = 0;
             obstaclesObject[4].x = Math.floor(Math.random() * (320 - 260) + 260);
-            obstaclesObject[4].y = 0;
             obstaclesObject[5].x = Math.floor(Math.random() * (400 - 340) + 340);
-            obstaclesObject[5].y = 0;
             obstaclesObject[6].x = Math.floor(Math.random() * (500 - 420) + 420);
-            obstaclesObject[6].y = 0;
+            for (let i = 1; i <= Object.keys(obstaclesObject).length; i++) obstaclesObject[i].y = 0;
         }
     }
 
+    //Moving obstacles
+
     if (score < 30) {
         speed = 1.5;
-    } else if (score < 60) {
+        for (let i = 1; i <= 3; i++) obstaclesObject[i].y += speed;
+    } else if (score >= 30 && score < 60) {
         speed = 2;
-        ctx.drawImage(bomb, obstaclesObject[4].x, obstaclesObject[4].y, 20, 20);
-        obstaclesObject[4].y += speed;
-    } else if (score < 100) {
+        ctx.drawImage(obstacle, obstaclesObject[4].x, obstaclesObject[4].y, 20, 20);
+        for (let i = 1; i <= 4; i++) obstaclesObject[i].y += speed;
+    } else if (score >= 60 && score < 100) {
         speed = 2.5;
-        for (let i = 4; i <= 5; i++) {
-            ctx.drawImage(bomb, obstaclesObject[i].x, obstaclesObject[i].y, 20, 20);
+        for (let i = 1; i <= 5; i++) {
+            ctx.drawImage(obstacle, obstaclesObject[i].x, obstaclesObject[i].y, 20, 20);
             obstaclesObject[i].y += speed;
         }
     } else {
         speed = 3;
-        for (let i = 4; i <= 6; i++) {
-            ctx.drawImage(bomb, obstaclesObject[i].x, obstaclesObject[i].y, 20, 20);
+        for (let i = 1; i <= Object.keys(obstaclesObject).length; i++) {
+            ctx.drawImage(obstacle, obstaclesObject[i].x, obstaclesObject[i].y, 20, 20);
             obstaclesObject[i].y += speed;
         }
     }
 
-    //Store Highscores to Local Storage
+    //Store highscores to local storage
 
     if (highscore == null) {
         localStorage.setItem("highscore", score);
@@ -282,26 +258,26 @@ let draw = (x, y, playerWidth, playerHeight, obstaclesObject, score) => {
         thirdHighscore = localStorage.getItem("thirdHighscore");
     }
 
-    //Calling Player Movements
+    //Calling player movements
 
-    if (direction == "right") {
+    if (direction == "right" && x <= 495) {
         moveRight();
         direction = "";
     }
-    if (direction == "left") {
+    if (direction == "left" && x >= 5) {
         moveLeft();
         direction = "";
     }
-    if (direction == "down") {
+    if (direction == "down" && y <= 295) {
         moveDown();
         direction = "";
     }
-    if (direction == "up") {
+    if (direction == "up" && y >= 5) {
         moveUp();
         direction = "";
     }
 
-    //Assigning Keys to Each Movement
+    //Assigning Keys to each player movement
 
     function moveRight() {
         x += 5;
@@ -325,10 +301,10 @@ let draw = (x, y, playerWidth, playerHeight, obstaclesObject, score) => {
 
     announceLevel(score);
     writeScore(score);
-    gameOver(x, y, playerWidth, playerHeight, obstaclesObject, score);
+    gameOver(x, y, playerWidth, playerHeight, obstaclesObject, speed, score);
 }
 
-//Level Announcement
+//Level announcement
 
 function writeLevel(level) {
     ctx.textAlign = "center";
@@ -344,30 +320,27 @@ function announceLevel(score) {
     if (score == 100) writeLevel("LEVEL 4");
 }
 
-//Wrting and updating score
+//Updating score
 
 function writeScore(score) {
     ctx.clearRect(0, 320, 520, 40);
     ctx.drawImage(footground, 0, 320, 520, 40);
+    ctx.drawImage(obstacle, 20, 327.5, 25, 25);
     ctx.fillStyle = "white";
     ctx.textAlign = "start";
     ctx.font = "25px Changa";
-    ctx.fillText("Score: " + score, 20, 347.5);
+    ctx.fillText(score, 50, 350);
 }
 
 //Game Over Effects and What to do if Game is Not Over
 
-function gameOver(x, y, playerWidth, playerHeight, obstaclesObject, score) {
+function gameOver(x, y, playerWidth, playerHeight, obstaclesObject, speed, score) {
     //Logic for Game Over
+    const isPlayerTocuhingAnObstacle = {};
+    for (let i = 1; i <= Object.keys(obstaclesObject).length; i++) isPlayerTocuhingAnObstacle["obstacle" + i] = (x + 19 >= obstaclesObject[i].x && x + 19 <= obstaclesObject[i].x + 38 && y - 19 <= obstaclesObject[i].y && y - 19 > obstaclesObject[i].y - 38);
+    const playerIsTouchingAnObstacle = Object.values(isPlayerTocuhingAnObstacle).includes(true);
 
-    let playerIsTouchingObstacle1 = (x + 19 >= obstaclesObject[1].x && x + 19 <= obstaclesObject[1].x + 38 && y - 19 <= obstaclesObject[1].y && y - 19 > obstaclesObject[1].y - 38);
-    let playerIsTouchingObstacle2 = (x + 19 >= obstaclesObject[2].x && x + 19 <= obstaclesObject[2].x + 38 && y - 19 <= obstaclesObject[2].y && y - 19 > obstaclesObject[2].y - 38);
-    let playerIsTouchingObstacle3 = (x + 19 >= obstaclesObject[3].x && x + 19 <= obstaclesObject[3].x + 38 && y - 19 <= obstaclesObject[3].y && y - 19 > obstaclesObject[3].y - 38);
-    let playerIsTouchingObstacle4 = (x + 19 >= obstaclesObject[4].x && x + 19 <= obstaclesObject[4].x + 38 && y - 19 <= obstaclesObject[4].y && y - 19 > obstaclesObject[4].y - 38);;
-    let playerIsTouchingObstacle5 = (x + 19 >= obstaclesObject[5].x && x + 19 <= obstaclesObject[5].x + 38 && y - 19 <= obstaclesObject[5].y && y - 19 > obstaclesObject[5].y - 38);;
-    let playerIsTouchingObstacle6 = (x + 19 >= obstaclesObject[6].x && x + 19 <= obstaclesObject[6].x + 38 && y - 19 <= obstaclesObject[6].y && y - 19 > obstaclesObject[6].y - 38);;
-
-    if (playerIsTouchingObstacle1 || playerIsTouchingObstacle2 || playerIsTouchingObstacle3 || playerIsTouchingObstacle4 || playerIsTouchingObstacle5 || playerIsTouchingObstacle6) {
+    if (playerIsTouchingAnObstacle) {
         document.removeEventListener("keydown", setDirection);
         ctx.clearRect(0, 0, 520, 320);
         ctx.drawImage(background, 0, 0, 520, 320);
@@ -386,5 +359,5 @@ function gameOver(x, y, playerWidth, playerHeight, obstaclesObject, score) {
         lose.play();
         document.addEventListener("keydown", startGame);
         return "Game Over";
-    } else requestAnimationFrame(() => draw(x, y, playerWidth, playerHeight, obstaclesObject, score));
+    } else requestAnimationFrame(() => draw(x, y, playerWidth, playerHeight, obstaclesObject, speed, score));
 }
