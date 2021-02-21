@@ -142,7 +142,7 @@ const obstacles = {
         y: 0
     },
     2: {
-        x: Math.floor((Math.random() * (320 - 189) + 189)),
+        x: Math.floor(Math.random() * (320 - 189) + 189),
         y: 0
     },
     3: {
@@ -186,23 +186,26 @@ let draw = (x, y, playerWidth, playerHeight, obstaclesObject, speed, score) => {
         scoreAudio.play();
         score += 3;
         if (score < 30) {
+            obstaclesObject[1].x = Math.floor(Math.random() * 169);
+            obstaclesObject[2].x = Math.floor(Math.random() * (320 - 189) + 189);
+            obstaclesObject[3].x = Math.floor(Math.random() * (500 - 340) + 340);
             for (let i = 1; i <= 3; i++) obstaclesObject[i].y = 0;
         } else if (score < 60) {
             obstaclesObject[1].x = Math.floor(Math.random() * 125);
-            obstaclesObject[2].x = Math.floor((Math.random() * (250 - 145) + 145));
+            obstaclesObject[2].x = Math.floor(Math.random() * (250 - 145) + 145);
             obstaclesObject[3].x = Math.floor(Math.random() * (375 - 270) + 270);
             obstaclesObject[4].x = Math.floor(Math.random() * (500 - 395) + 395);
             for (let i = 1; i <= 4; i++) obstaclesObject[i].y = 0;
         } else if (score < 100) {
             obstaclesObject[1].x = Math.floor(Math.random() * 100);
-            obstaclesObject[2].x = Math.floor((Math.random() * (200 - 120) + 120));
+            obstaclesObject[2].x = Math.floor(Math.random() * (200 - 120) + 120);
             obstaclesObject[3].x = Math.floor(Math.random() * (300 - 220) + 220);
             obstaclesObject[4].x = Math.floor(Math.random() * (400 - 320) + 320);
             obstaclesObject[5].x = Math.floor(Math.random() * (500 - 420) + 420);
             for (let i = 1; i <= 5; i++) obstaclesObject[i].y = 0;
         } else {
             obstaclesObject[1].x = Math.floor(Math.random() * 80);
-            obstaclesObject[2].x = Math.floor((Math.random() * (160 - 100) + 100));
+            obstaclesObject[2].x = Math.floor(Math.random() * (160 - 100) + 100);
             obstaclesObject[3].x = Math.floor(Math.random() * (240 - 180) + 180);
             obstaclesObject[4].x = Math.floor(Math.random() * (320 - 260) + 260);
             obstaclesObject[5].x = Math.floor(Math.random() * (400 - 340) + 340);
