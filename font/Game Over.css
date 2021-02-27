@@ -2,7 +2,7 @@
 
 @font-face {
     font-family: 'Game Over';
-    src: url('Game Over Regular.woff2') format('woff2'), url('Game Over Regular.woff') format('woff');
+    src: url('Game Over Regular.woff2') format('woff2'), url('Game Over Regular.woff') format('woff'), url('Game Over Regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
     font-stretch: normal;
