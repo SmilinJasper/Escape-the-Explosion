@@ -13,6 +13,7 @@ canvas {
 }
 
 p {
+    text-transform: uppercase;
     position: relative;
     text-align: center;
     font-family: 'Game Over', 'sans-serif';
