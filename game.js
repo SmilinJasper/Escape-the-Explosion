@@ -55,7 +55,7 @@ function drawStartScreen() {
     document.addEventListener("keydown", displayHighScoreBoard);
 }
 
-setTimeout(() => { background.onload = () => drawStartScreen() }, 20);
+setInterval(() => drawStartScreen(), 300);
 
 footground.onload = () => {
     ctx.drawImage(footground, 0, 320, 520, 40);
