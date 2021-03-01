@@ -55,7 +55,12 @@ function drawStartScreen() {
     document.addEventListener("keydown", displayHighScoreBoard);
 }
 
-background.onload = () => setTimeout(() => drawStartScreen(), 300);
+const gameOverFont = new FontFace("Game Over", "url(font/game_over_regular.woff2)");
+
+background.onload = () => gameOverFont.load().then(font => {
+    document.fonts.add(font);
+    drawStartScreen();
+});
 
 footground.onload = () => {
     ctx.drawImage(footground, 0, 320, 520, 40);
