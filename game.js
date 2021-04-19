@@ -11,7 +11,7 @@ const footground = new Image();
 const backButton = new Image();
 
 obstacle.src = "img/obstacle.png";
-background.src = "img/background.png";
+background.src = "img/background.jpg";
 footground.src = "img/footground.jpg";
 backButton.src = " img/back_button.png";
 
