@@ -37,23 +37,7 @@ start.src = "audio/start.ogg";
 select.src = "audio/select.wav";
 back.src = "audio/back.wav";
 
-//Create background and footground
-
-function drawStartScreen() {
-    ctx.drawImage(background, 0, 0, 520, 320);
-    ctx.textAlign = "center";
-    ctx.font = "100px Game Over";
-    ctx.fillText("PRESS START", 260, 175);
-    ctx.font = "75px Game Over";
-    ctx.fillText("HIGHSCORES", 260, 210);
-    ctx.font = "35px Game Over";
-    ctx.textAlign = "start";
-    ctx.fillText("START - ENTER", 10, 310);
-    ctx.textAlign = "end";
-    ctx.fillText("HIGHSCORES - H", 510, 310);
-    document.addEventListener("keydown", startGame);
-    document.addEventListener("keydown", displayHighScoreBoard);
-}
+//Load Font 
 
 var gameOverFont = new FontFace("Game Over", "url(font/game_over_regular.woff)");
 
@@ -79,6 +63,36 @@ background.onload = () => gameOverFont.load().then(font => {
 
 footground.onload = () => {
     ctx.drawImage(footground, 0, 320, 520, 40);
+}
+
+//Create background and footground
+
+function drawStartScreen() {
+    ctx.drawImage(background, 0, 0, 520, 320);
+    ctx.textAlign = "center";
+    ctx.font = "100px Game Over";
+    ctx.fillText("PRESS SPACE TO START", 260, 175);
+    ctx.font = "75px Game Over";
+    ctx.fillText("HIGHSCORES", 260, 210);
+    ctx.font = "35px Game Over";
+    ctx.textAlign = "start";
+    ctx.fillText("HIGHSCORES - H", 8, 310);
+    document.addEventListener("keydown", startGame);
+    document.addEventListener("keydown", displayHighScoreBoard);
+}
+
+// Start key
+
+function startGame(event) {
+    var key = event.keyCode;
+    if (key == 13 || key == 32) {
+        draw(x, y, playerWidth, playerHeight, obstacles, speed, score);
+        document.addEventListener("keydown", setDirection);
+        document.removeEventListener("keydown", displayMainScreen);
+        document.removeEventListener("keydown", displayHighScoreBoard);
+        document.removeEventListener(event.type, arguments.callee);
+        start.play();
+    }
 }
 
 //Menu functions
@@ -128,30 +142,16 @@ let highscore = localStorage.getItem("highscore");
 let secondHighscore = localStorage.getItem("secondHighscore");
 let thirdHighscore = localStorage.getItem("thirdHighscore");
 
-// Start key
-
-function startGame(event) {
-    var key = event.keyCode;
-    if (key == 13) {
-        draw(x, y, playerWidth, playerHeight, obstacles, speed, score);
-        document.addEventListener("keydown", setDirection);
-        document.removeEventListener("keydown", displayMainScreen);
-        document.removeEventListener("keydown", displayHighScoreBoard);
-        document.removeEventListener(event.type, arguments.callee);
-        start.play();
-    }
-}
-
 //Set directions for player movements
 
 let direction;
 
 function setDirection(event) {
     let key = event.keyCode;
-    if (key == 39) direction = "right";
-    if (key == 37) direction = "left";
-    if (key == 40) direction = "down";
-    if (key == 38) direction = "up";
+    if (key == 39 || key == 68) direction = "right";
+    if (key == 37 || key == 65) direction = "left";
+    if (key == 40 || key == 83) direction = "down";
+    if (key == 38 || key == 87) direction = "up";
 }
 
 //Initial position of obstacles
@@ -370,13 +370,14 @@ function gameOver(x, y, playerWidth, playerHeight, obstaclesObject, speed, score
         ctx.fillStyle = "black";
         ctx.textAlign = "center";
         ctx.font = "100px Game Over";
-        ctx.fillText("GAME OVER", 260, 175);
+        ctx.fillText("GAME OVER", 260, 125);
         ctx.font = "75px Game Over";
-        ctx.fillText("SCORE: " + score, 260, 210);
+        ctx.fillText("SCORE: " + score, 260, 160);
         ctx.font = "60px Game Over";
-        ctx.fillText("1. " + highscore, 260, 240);
-        ctx.fillText("2. " + secondHighscore, 260, 265);
-        ctx.fillText("3. " + thirdHighscore, 260, 290);
+        ctx.fillText("1. " + highscore, 260, 190);
+        ctx.fillText("2. " + secondHighscore, 260, 215);
+        ctx.fillText("3. " + thirdHighscore, 260, 240);
+        ctx.fillText("PRESS SPACE TO TRY AGAIN", 260, 290);
         ctx.clearRect(0, 320, 520, 40);
         ctx.drawImage(footground, 0, 320, 520, 40);
         lose.play();
